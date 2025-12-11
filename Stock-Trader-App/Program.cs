@@ -4,9 +4,12 @@ using System.Net;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddHttpClient();
+
+builder.Services.AddSingleton<YahooStockScraper>();
 builder.Services.AddScoped<OptionService>();
 
 builder.Services.AddControllers();
+
 
 // YAHOO scraper for stock prices
 builder.Services.AddHttpClient<YahooStockScraper>(client =>
