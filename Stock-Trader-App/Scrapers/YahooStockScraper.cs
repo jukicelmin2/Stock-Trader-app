@@ -28,6 +28,7 @@ namespace StockTrader.Api.Scrapers
 
         public async Task<Stock> GetStockAsync(string ticker)
         {
+            try { 
             var url = $"https://finance.yahoo.com/quote/{ticker}/";
 
             string html = await _httpClient.GetStringAsync(url);
@@ -41,12 +42,21 @@ namespace StockTrader.Api.Scrapers
 
             // Najdemo price
             var closePriceNode = doc.DocumentNode.SelectSingleNode("//span[@data-testid='qsp-price']");
-            var absoluteChangeNode = doc.DocumentNode.SelectSingleNode("//span[@data-testid='qsp-price-change']");
-            var relativeChangeNode = doc.DocumentNode.SelectSingleNode("//span[@data-testid='qsp-price-change-percent']");
+            var absoluteChangeCloseNode = doc.DocumentNode.SelectSingleNode("//span[@data-testid='qsp-price-change']");
+            var relativeChangeCloseNode = doc.DocumentNode.SelectSingleNode("//span[@data-testid='qsp-price-change-percent']");
+            var absoluteChangePreNode = doc.DocumentNode.SelectSingleNode("//span[@data-testid='qsp-pre-price-change']");
+            var relativeChangePreNode = doc.DocumentNode.SelectSingleNode("//span[@data-testid='qsp-pre-price-change-percent']");
+            var preMarketPriceNode = doc.DocumentNode.SelectSingleNode("//span[@data-testid='qsp-pre-price']");
 
-            double relativeChange = TryParseDouble(relativeChangeNode?.InnerText);
-            double absoluteChange = TryParseDouble(absoluteChangeNode?.InnerText);
+
+            double relativeChangeClose = TryParseDouble(relativeChangeCloseNode?.InnerText);
+            double absoluteChangeClose = TryParseDouble(absoluteChangeCloseNode?.InnerText);
             double closePrice = TryParseDouble(closePriceNode?.InnerText);
+            double preMarketPrice = TryParseDouble(preMarketPriceNode?.InnerText);
+            double absoluteChangePre = TryParseDouble(absoluteChangePreNode?.InnerText);
+            double relativeChangePre = TryParseDouble(relativeChangePreNode?.InnerText);
+
+
 
             var stock = new Stock
             {
@@ -56,15 +66,29 @@ namespace StockTrader.Api.Scrapers
                 AtClosePrice = new Price
                 {
                     Value = closePrice,
-                    AbsoluteChange = absoluteChange,
-                    RelativeChange = relativeChange,
+                    AbsoluteChange = absoluteChangeClose,
+                    RelativeChange = relativeChangeClose,
                     Date = DateTime.Now,
+                },
+                PreMarketPrice = new Price
+                {
+                    Value = preMarketPrice,
+                    AbsoluteChange = absoluteChangePre,
+                    RelativeChange = relativeChangePre,
+                    Date = DateTime.Now,
+
                 }
             };
 
+
             stock.HistoricalData = await GetHistoricalPricesAsync(ticker);
 
-            return stock;
+            return stock; }
+            catch
+    {
+                return null;
+            }
+
         }
 
         public List<HistoricalPrice> HistoricalData { get; set; }

@@ -14,7 +14,7 @@ namespace Stock_Trader_App.Controllers
             _scraper = scraper;
         }
 
-        
+
         [HttpGet("{ticker}")]
         public async Task<IActionResult> GetStock(string ticker)
         {
