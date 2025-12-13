@@ -8,6 +8,9 @@ import {
   ResponsiveContainer,
   Legend,
 } from "recharts";
+import { useOptions } from "../features/options/useOptions";
+import OptionsTable from "../features/options/OptionsTable";
+import OptionsFilters from "../features/options/OptionsFIlter";
 
 type PriceInfo = {
   value: number;
@@ -115,6 +118,13 @@ const SearchStocks = (): JSX.Element => {
 
   const trendUp = absolute >= 0;
 
+  const {
+    options,
+    loading: optionsLoading,
+    setFilter,
+    filters,
+  } = useOptions(stock?.ticker ?? null, showDetail);
+
   return (
     <div className="px-6 pb-12">
       <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
@@ -179,10 +189,10 @@ const SearchStocks = (): JSX.Element => {
 
       {showDetail && stock && (
         <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
-          <div className="bg-white rounded-2xl w-full max-w-2xl shadow-2xl overflow-hidden">
+          <div className="bg-white rounded-2xl w-full max-w-4xl shadow-2xl overflow-hidden">
             <div className="px-6 py-4 border-b flex items-center justify-between">
               <h3 className="text-lg font-semibold text-gray-900">
-                {stock.ticker} – Price history
+                {stock.ticker} Details
               </h3>
               <button
                 onClick={() => setShowDetail(false)}
@@ -278,6 +288,29 @@ const SearchStocks = (): JSX.Element => {
                     />
                   </AreaChart>
                 </ResponsiveContainer>
+              </div>
+
+              <div className="pt-6 border-t space-y-4">
+                <h4 className="text-lg font-semibold text-gray-900">Options</h4>
+
+                <OptionsFilters
+                  type={filters.type ?? ""}
+                  minPremium={filters.minPremium ?? ""}
+                  dteMin={filters.dteMin ?? ""}
+                  dteMax={filters.dteMax ?? ""}
+                  onChange={setFilter}
+                />
+
+                {optionsLoading && (
+                  <div className="text-sm text-gray-500">Loading options…</div>
+                )}
+                {!optionsLoading && (
+                  <div className="border rounded-lg">
+                    <div className="max-h-[320px] overflow-y-auto">
+                      <OptionsTable options={options} />
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </div>
