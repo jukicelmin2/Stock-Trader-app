@@ -21,11 +21,9 @@ export const useTradeIdeas = () => {
 
       const data = await res.json();
 
-      // map backend → frontend model
       const mapped: TradeIdea[] = data.map((i: any) => ({
-        id: i.id,
+        id: Number(i.id),
         ticker: i.ticker,
-
         option: {
           type: i.optionType === "CALL" ? 1 : 2,
           strike: i.strikePrice,
@@ -33,17 +31,15 @@ export const useTradeIdeas = () => {
           premium: i.premium,
           iv: i.iv,
           dte: i.dte,
-          delta: i.delta ?? null,
           roi: i.roi,
+          delta: i.delta ?? null,
         },
-
         strategy:
           i.strategy === 1
             ? "CoveredCall"
             : i.strategy === 2
             ? "CashSecuredPut"
             : "Other",
-
         notes: i.notes ?? "",
         status: i.status === 0 ? "Idea" : i.status === 1 ? "Opened" : "Closed",
       }));

@@ -42,7 +42,7 @@ const TradeIdeasTable = ({ ideas, onDelete }: Props) => {
               <td className="px-3 py-2 text-right text-xs">{i.status}</td>
               <td className="px-3 py-2 text-right">
                 <button
-                  onClick={() => onDelete(i.id!)}
+                  onClick={() => onDelete(i.id)}
                   className="text-xs underline text-red-600 hover:text-red-800"
                 >
                   Delete

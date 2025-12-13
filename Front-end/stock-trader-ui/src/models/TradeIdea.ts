@@ -1,5 +1,5 @@
 export type TradeIdea = {
-  id?: string;
+  id: number;
   ticker: string;
 
   option: {
@@ -9,10 +9,11 @@ export type TradeIdea = {
     premium: number;
     iv: number;
     dte: number;
-    delta?: number | null;
+    roi: number;
+    delta: number | null;
   };
 
-  strategy: number;
+  strategy: "CoveredCall" | "CashSecuredPut" | "Other";
   notes: string;
   status: "Idea" | "Opened" | "Closed";
 };
