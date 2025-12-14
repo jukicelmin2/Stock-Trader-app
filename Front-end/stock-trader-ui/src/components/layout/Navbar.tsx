@@ -1,14 +1,15 @@
-import { FC } from "react";
+import type { FC } from "react";
+import { NavLink } from "react-router-dom";
 
 type NavItem = {
   label: string;
-  href: string;
+  to: string;
 };
 
 const navItems: NavItem[] = [
-  { label: "Dashboard", href: "#" },
-  { label: "Watchlist", href: "#" },
-  { label: "Trade Ideas", href: "#" },
+  { label: "Dashboard", to: "/" },
+  { label: "Watchlist", to: "/watchlist" },
+  { label: "Trade Ideas", to: "/trade-ideas" },
 ];
 
 const Navbar: FC = () => {
@@ -26,13 +27,17 @@ const Navbar: FC = () => {
 
         <div className="hidden md:flex items-center gap-8 text-gray-600">
           {navItems.map((item) => (
-            <a
+            <NavLink
               key={item.label}
-              href={item.href}
-              className="hover:text-black transition"
+              to={item.to}
+              className={({ isActive }) =>
+                `transition ${
+                  isActive ? "text-black font-medium" : "hover:text-black"
+                }`
+              }
             >
               {item.label}
-            </a>
+            </NavLink>
           ))}
         </div>
       </div>
