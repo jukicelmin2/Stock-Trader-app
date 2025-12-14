@@ -43,6 +43,13 @@ export default function TradeIdeasPage() {
                 year: "numeric",
               });
 
+              const strategyLabel =
+                idea.strategy === "CoveredCall"
+                  ? "Covered Call"
+                  : idea.strategy === "CashSecuredPut"
+                  ? "Cash Secured Put"
+                  : "Other";
+
               const handleDelete = () => {
                 setPendingDelete({ id: idea.id, ticker: idea.ticker });
               };
@@ -60,6 +67,9 @@ export default function TradeIdeasPage() {
                     <div className="text-sm text-slate-700 flex flex-wrap items-center gap-2">
                       <span className="inline-flex items-center gap-2 rounded-full bg-slate-200/80 px-3 py-1 font-semibold text-slate-900">
                         {idea.option.type === 1 ? "Call" : "Put"}
+                      </span>
+                      <span className="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-3 py-1 font-semibold text-emerald-700 ring-1 ring-emerald-100">
+                        {strategyLabel}
                       </span>
                       <span className="text-slate-500" aria-hidden="true">
                         &middot;
