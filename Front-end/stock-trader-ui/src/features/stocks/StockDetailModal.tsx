@@ -21,6 +21,16 @@ type HistoricalPoint = {
 
 type Stock = {
   ticker: string;
+  atClosePrice?: {
+    value: number;
+    absoluteChange: number;
+    relativeChange: number;
+  };
+  preMarketPrice?: {
+    value: number;
+    absoluteChange: number;
+    relativeChange: number;
+  } | null;
   historicalData: HistoricalPoint[];
 };
 
@@ -87,19 +97,56 @@ const StockDetailModal = ({ ticker, onClose }: Props) => {
           </div>
 
           <div className="h-72">
-            <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={chartData}>
-                <XAxis dataKey="date" />
-                <YAxis />
-                <Tooltip />
-                <Area
-                  dataKey="price"
-                  stroke="#111827"
-                  fill="#111827"
-                  fillOpacity={0.2}
-                />
-              </AreaChart>
-            </ResponsiveContainer>
+            <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+              <div className="flex-1 h-72">
+                <ResponsiveContainer width="100%" height="100%">
+                  <AreaChart data={chartData}>
+                    <XAxis dataKey="date" />
+                    <YAxis />
+                    <Tooltip />
+                    <Area
+                      dataKey="price"
+                      stroke="#111827"
+                      fill="#111827"
+                      fillOpacity={0.2}
+                    />
+                  </AreaChart>
+                </ResponsiveContainer>
+              </div>
+
+              <div className="w-full lg:w-64 flex-shrink-0 rounded-2xl border border-slate-200 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-700 text-white shadow-lg p-4">
+                <div className="text-sm uppercase tracking-wide text-slate-200">
+                  Current Price
+                </div>
+                <div className="mt-2 text-3xl font-bold">
+                  {stock.atClosePrice?.value
+                    ? `$${stock.atClosePrice.value.toFixed(2)}`
+                    : "N/A"}
+                </div>
+                <div className="mt-3 flex items-center gap-2 text-sm">
+                  {stock.atClosePrice && (
+                    <>
+                      <span
+                        className={`font-semibold ${
+                          stock.atClosePrice.absoluteChange >= 0
+                            ? "text-emerald-300"
+                            : "text-rose-300"
+                        }`}
+                      >
+                        {stock.atClosePrice.absoluteChange >= 0 ? "+" : ""}
+                        {stock.atClosePrice.absoluteChange.toFixed(2)} (
+                        {stock.atClosePrice.relativeChange.toFixed(2)}%)
+                      </span>
+                    </>
+                  )}
+                  {stock.preMarketPrice && (
+                    <span className="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs font-semibold text-slate-100 border border-white/10">
+                      Pre: ${stock.preMarketPrice.value.toFixed(2)}
+                    </span>
+                  )}
+                </div>
+              </div>
+            </div>
           </div>
 
           <div className="pt-6 border-t space-y-4">
