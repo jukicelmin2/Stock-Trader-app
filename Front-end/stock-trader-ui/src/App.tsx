@@ -9,7 +9,7 @@ import WatchlistPage from "./features/watchList/WatchListPage";
 
 const App = (): JSX.Element => {
   return (
-    <div className="min-h-screen flex justify-center bg-neutral-100">
+    <div className="min-h-screen flex justify-center bg-neutral-100 text-slate-900">
       <div className="w-full max-w-5xl">
         <Navbar />
 

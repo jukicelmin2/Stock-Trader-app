@@ -49,7 +49,7 @@ const SaveIdeaModal = ({ option, onClose }: Props) => {
             <h2 className="text-lg font-semibold text-slate-900">
               Save Trade Idea
             </h2>
-            <p className="mt-1 text-xs text-slate-500">
+            <p className="mt-1 text-xs text-slate-700">
               Capture this option idea for later review.
             </p>
           </div>
@@ -113,7 +113,7 @@ const SaveIdeaModal = ({ option, onClose }: Props) => {
         <div className="flex justify-end gap-2 pt-2">
           <button
             onClick={onClose}
-            className="px-4 py-2 text-sm font-medium rounded-lg border border-slate-200 text-slate-700 hover:bg-slate-50"
+            className="px-4 py-2 text-sm font-medium rounded-lg border border-slate-200 text-slate-700 hover:bg-slate-50 cursor-pointer"
           >
             Cancel
           </button>
@@ -121,7 +121,7 @@ const SaveIdeaModal = ({ option, onClose }: Props) => {
           <button
             onClick={handleSave}
             disabled={saving}
-            className="px-4 py-2 text-sm font-semibold rounded-lg bg-slate-900 text-white hover:bg-black disabled:opacity-50 shadow-sm"
+            className="px-4 py-2 text-sm font-semibold rounded-lg bg-slate-900 text-white hover:bg-black disabled:opacity-50 shadow-sm cursor-pointer"
           >
             {saving ? "Saving..." : "Save"}
           </button>

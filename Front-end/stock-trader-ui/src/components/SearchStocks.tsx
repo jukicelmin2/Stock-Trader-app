@@ -71,7 +71,7 @@ const SearchStocks = (): JSX.Element => {
           <div className="text-sm font-semibold text-slate-900">
             Quick Search
           </div>
-          <div className="text-xs text-slate-500">
+          <div className="text-xs text-slate-700">
             Find a ticker, view live details, and save it to your watchlist.
           </div>
         </div>
@@ -81,7 +81,7 @@ const SearchStocks = (): JSX.Element => {
             value={query}
             onChange={(e) => setQuery(e.target.value.toUpperCase())}
             placeholder="Ticker (e.g. TSLA)"
-            className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-slate-300"
+            className="w-full rounded-xl border border-slate-200 px-4 py-3 text-sm text-slate-900 placeholder-slate-600 shadow-sm focus:outline-none focus:ring-2 focus:ring-slate-300"
           />
 
           {loading && (

@@ -1,0 +1,37 @@
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: stock-trader
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: elmin123
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./Stock-Trader-App
+    environment:
+      ASPNETCORE_URLS: http://+:8080
+      ConnectionStrings__DefaultConnection: Host=db;Port=5432;Database=stock-trader;Username=postgres;Password=elmin123
+    depends_on:
+      db:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: ./Front-end/stock-trader-ui
+    ports:
+      - "5063:80"
+    depends_on:
+      - backend
+
+volumes:
+  postgres-data:

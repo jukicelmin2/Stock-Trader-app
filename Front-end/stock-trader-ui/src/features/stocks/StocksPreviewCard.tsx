@@ -66,21 +66,23 @@ const StocksPreviewCard: FC<Props> = ({
 
       <div className="flex items-center gap-4">
         {onShowDetails && (
-          <button
-            onClick={onShowDetails}
-            className="w-9 h-9 flex items-center justify-center rounded-full border border-gray-300 text-gray-600 hover:bg-gray-100"
-          >
-            i
-          </button>
-        )}
+        <button
+          onClick={onShowDetails}
+          className="inline-flex items-center gap-1 rounded-full bg-slate-900 px-3 py-1.5 text-xs font-semibold text-white shadow-sm transition hover:bg-black cursor-pointer"
+        >
+          Details
+        </button>
+      )}
 
         <button
           onClick={onToggleWatchlist}
-          className={`px-4 py-1.5 rounded-full text-sm font-medium ${
-            inWatchlist ? "bg-gray-200 text-gray-800" : "bg-gray-900 text-white"
+          className={`px-4 py-1.5 rounded-full text-sm font-medium cursor-pointer ${
+            inWatchlist
+              ? "bg-rose-50 text-rose-700 border border-rose-200"
+              : "bg-gradient-to-r from-emerald-500 to-teal-600 text-white shadow-lg shadow-emerald-200 ring-1 ring-emerald-300/60 hover:brightness-105"
           }`}
         >
-          {inWatchlist ? "Added" : "Add"}
+          {inWatchlist ? "Delete" : "Add"}
         </button>
       </div>
     </div>
