@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useTradeIdeas } from "../features/tradeIdea/useTradeIdeas";
+import { useTradeIdeas } from "../features/tradeIdeas/useTradeIdeas";
 import Header from "../components/Hero";
 
 type PendingDelete = {
