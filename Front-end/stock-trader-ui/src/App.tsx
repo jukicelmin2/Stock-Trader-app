@@ -1,5 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 import type { JSX } from "react";
+import TradeIdeasPage from "./pages/TradeIdeasPage";
 
 import Navbar from "./components/layout/Navbar";
 import Hero from "./components/Hero";
@@ -8,9 +9,7 @@ import WatchlistPage from "./features/watchList/WatchListPage";
 
 const App = (): JSX.Element => {
   return (
-    // ⬇️ samo flex centriranje, NEMA promjene boja
     <div className="min-h-screen flex justify-center bg-neutral-100">
-      {/* ⬇️ centralni wrapper */}
       <div className="w-full max-w-5xl">
         <Navbar />
 
@@ -24,6 +23,7 @@ const App = (): JSX.Element => {
               </>
             }
           />
+          <Route path="/trade-ideas" element={<TradeIdeasPage />} />
 
           <Route path="/watchlist" element={<WatchlistPage />} />
         </Routes>

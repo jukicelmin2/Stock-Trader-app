@@ -33,14 +33,14 @@ namespace StockTrader.Api.Scrapers
 
             string html = await _httpClient.GetStringAsync(url);
 
-            // 2) Ustvariš HTML dokument
+      
             var doc = new HtmlDocument();
             doc.LoadHtml(html);
 
             var nameNode = doc.DocumentNode.SelectSingleNode("//h1");
             string name = nameNode?.InnerText?.Trim() ?? ticker;
 
-            // Najdemo price
+       
             var closePriceNode = doc.DocumentNode.SelectSingleNode("//span[@data-testid='qsp-price']");
             var absoluteChangeCloseNode = doc.DocumentNode.SelectSingleNode("//span[@data-testid='qsp-price-change']");
             var relativeChangeCloseNode = doc.DocumentNode.SelectSingleNode("//span[@data-testid='qsp-price-change-percent']");
@@ -143,17 +143,17 @@ namespace StockTrader.Api.Scrapers
 
             input = input.Trim();
 
-            // Replace unicode minus
+          
             input = input.Replace("−", "-")
                          .Replace("–", "-")
                          .Replace("—", "-");
 
-            // Remove all characters that are NOT digits, dot, comma, sign
+           
             input = new string(input
                 .Where(c => char.IsDigit(c) || c == '.' || c == ',' || c == '-' || c == '+')
                 .ToArray());
 
-            // Normalize decimal separator
+         
             input = input.Replace(",", ".");
 
             double.TryParse(

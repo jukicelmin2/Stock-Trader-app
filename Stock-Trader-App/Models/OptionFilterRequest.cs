@@ -4,7 +4,7 @@ public class OptionFilterRequest
 {
     public string Ticker { get; set; }
 
-    public OptionType? Type { get; set; }  // CALL, PUT, or null (both)
+    public OptionType? Type { get; set; }  
 
     public double? MinDelta { get; set; }
     public double? MaxDelta { get; set; }

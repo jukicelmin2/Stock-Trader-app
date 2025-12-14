@@ -16,7 +16,7 @@ namespace Stock_Trader_App.Controllers
             _db = db;
         }
 
-        // CREATE
+     
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] TradeIdea idea)
         {
@@ -25,14 +25,14 @@ namespace Stock_Trader_App.Controllers
             return Ok(idea);
         }
 
-        // GET ALL
+    
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
             return Ok(await _db.TradeIdeas.ToListAsync());
         }
 
-        // DELETE
+     
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {

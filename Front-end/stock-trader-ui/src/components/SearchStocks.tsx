@@ -27,7 +27,9 @@ const SearchStocks = (): JSX.Element => {
   const isInWatchlist = stock ? tickers.includes(stock.ticker) : false;
 
   useEffect(() => {
-    if (!query) {
+    const ticker = query.trim().toUpperCase();
+
+    if (!ticker) {
       setStock(null);
       return;
     }
@@ -35,10 +37,22 @@ const SearchStocks = (): JSX.Element => {
     const t = setTimeout(async () => {
       try {
         setLoading(true);
-        const res = await fetch(`http://localhost:5063/api/Stock/${query}`);
-        const data = await res.json();
-        setStock(data);
         setError("");
+
+        const res = await fetch(`http://localhost:5063/api/Stock/${ticker}`);
+        if (!res.ok) throw new Error("not found");
+
+        const data = await res.json();
+        const matchesQuery =
+          data?.ticker && data.ticker.toUpperCase() === ticker;
+        const hasPrice =
+          data?.atClosePrice &&
+          Number.isFinite(data.atClosePrice.value) &&
+          data.atClosePrice.value > 0;
+
+        if (!matchesQuery || !hasPrice) throw new Error("not found");
+
+        setStock(data);
       } catch {
         setError("Stock not found");
         setStock(null);

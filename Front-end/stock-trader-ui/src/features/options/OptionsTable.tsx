@@ -59,15 +59,15 @@ const OptionsTable = ({ options, onSaveIdea }: Props): JSX.Element => {
               ${o.premiumPrice.toFixed(2)}
             </td>
 
-            <td className="py-3 px-3 text-right font-mono text-sky-700">
+            <td className="py-3 px-3 text-center font-mono text-sky-700">
               {(o.iv * 100).toFixed(2)}%
             </td>
 
-            <td className="py-3 px-3 text-right font-mono text-slate-800">
+            <td className="py-3 px-3 text-center font-mono text-slate-800">
               {o.dte}
             </td>
 
-            <td className="py-3 px-3 text-right font-mono text-emerald-700">
+            <td className="py-3 px-3 text-center font-mono text-emerald-700">
               {o.roi.toFixed(2)}%
             </td>
 

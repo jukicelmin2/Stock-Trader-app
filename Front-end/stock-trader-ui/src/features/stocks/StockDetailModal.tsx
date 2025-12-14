@@ -56,20 +56,20 @@ const StockDetailModal = ({ ticker, onClose }: Props) => {
   if (!stock) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/70 z-50 flex items-center justify-center">
-      <div className="bg-white rounded-2xl w-full max-w-4xl shadow-2xl overflow-hidden">
-        <div className="px-6 py-4 border-b flex justify-between items-center">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
+      <div className="relative bg-white rounded-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto shadow-2xl [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-slate-100 [&::-webkit-scrollbar-thumb]:bg-slate-300 hover:[&::-webkit-scrollbar-thumb]:bg-slate-400">
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 z-10 inline-flex h-10 w-10 items-center justify-center rounded-full bg-slate-100/90 text-lg font-semibold text-slate-600 ring-1 ring-slate-200 shadow-sm transition hover:bg-slate-200 hover:text-slate-900 hover:shadow-md"
+        >
+          ✕
+        </button>
+
+        <div className="px-6 py-4 border-b">
           <h3 className="text-lg font-semibold">{ticker} Details</h3>
-          <button
-            onClick={onClose}
-            className="text-xl text-gray-600 hover:text-black"
-          >
-            ✕
-          </button>
         </div>
 
         <div className="p-6 space-y-6">
-          {/* RANGE */}
           <div className="flex gap-2">
             {[7, 30].map((r) => (
               <button
@@ -86,7 +86,6 @@ const StockDetailModal = ({ ticker, onClose }: Props) => {
             ))}
           </div>
 
-          {/* CHART */}
           <div className="h-72">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={chartData}>
@@ -103,7 +102,6 @@ const StockDetailModal = ({ ticker, onClose }: Props) => {
             </ResponsiveContainer>
           </div>
 
-          {/* OPTIONS */}
           <div className="pt-6 border-t space-y-4">
             <h4 className="text-lg font-semibold">Options</h4>
 
@@ -119,7 +117,7 @@ const StockDetailModal = ({ ticker, onClose }: Props) => {
               <div className="text-sm text-gray-500">Loading options...</div>
             ) : (
               <div className="border rounded-lg overflow-hidden">
-                <div className="max-h-[320px] overflow-y-auto">
+                <div className="max-h-[300px] overflow-y-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-slate-100 [&::-webkit-scrollbar-thumb]:bg-slate-300 hover:[&::-webkit-scrollbar-thumb]:bg-slate-400">
                   <OptionsTable
                     options={options}
                     onSaveIdea={(o) => setSelectedOption(o)}

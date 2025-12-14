@@ -6,10 +6,8 @@ namespace Stock_Trader_App.Models
     {
         public int Id { get; set; }
 
-        // Basic stock info
         public string Ticker { get; set; }
 
-        // Option snapshot
         public double StrikePrice { get; set; }
         public DateTime ExpirationDate { get; set; }
         public double? Delta { get; set; }
@@ -17,9 +15,8 @@ namespace Stock_Trader_App.Models
         public double IV { get; set; }
         public int DTE { get; set; }
         public double ROI { get; set; }
-        public string OptionType { get; set; } // CALL or PUT
+        public string OptionType { get; set; } 
 
-        // User inputs
         public Strategy Strategy { get; set; }
         public string Notes { get; set; }
         public Status Status { get; set; } = Status.Idea;
