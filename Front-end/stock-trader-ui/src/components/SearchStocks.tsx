@@ -1,7 +1,7 @@
 import { useEffect, useState, type JSX } from "react";
 import StocksPreviewCard from "../features/stocks/StocksPreviewCard";
 import StockDetailModal from "../features/stocks/StockDetailModal";
-import { useWatchlist } from "../features/watchList/useWatchList";
+import { useWatchlist } from "../features/watchlist/useWatchlist";
 
 type PriceInfo = {
   value: number;

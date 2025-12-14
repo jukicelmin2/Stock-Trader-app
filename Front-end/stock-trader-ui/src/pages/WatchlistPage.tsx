@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import StocksPreviewCard from "../stocks/StocksPreviewCard";
-import StockDetailModal from "../stocks/StockDetailModal";
-import { useWatchlist } from "./useWatchList";
+import StocksPreviewCard from "../features/stocks/StocksPreviewCard";
+import StockDetailModal from "../features/stocks/StockDetailModal";
+import { useWatchlist } from "../features/watchlist/useWatchlist";
 
 type PriceInfo = {
   value: number;
@@ -15,7 +15,7 @@ type StockPreview = {
   preMarketPrice?: PriceInfo | null;
 };
 
-const WatchListPage = () => {
+const WatchlistPage = () => {
   const { tickers, removeTicker } = useWatchlist();
   const [selected, setSelected] = useState<string | null>(null);
   const [stocks, setStocks] = useState<Record<string, StockPreview>>({});
@@ -126,4 +126,4 @@ const WatchListPage = () => {
   );
 };
 
-export default WatchListPage;
+export default WatchlistPage;

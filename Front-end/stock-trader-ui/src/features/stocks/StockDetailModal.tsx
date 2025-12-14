@@ -8,10 +8,10 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-import { useOptions } from "../../features/options/useOptions";
-import OptionsTable from "../../features/options/OptionsTable";
-import OptionsFilters from "../../features/options/OptionsFilter";
-import SaveIdeaModal from "../../features/options/SaveIdeaModal";
+import { useOptions } from "../options/useOptions";
+import OptionsTable from "../options/OptionsTable";
+import OptionsFilters from "../options/OptionsFilter";
+import SaveIdeaModal from "../options/SaveIdeaModal";
 import type { Option } from "../../models/Option";
 
 type HistoricalPoint = {
@@ -72,7 +72,7 @@ const StockDetailModal = ({ ticker, onClose }: Props) => {
           onClick={onClose}
           className="absolute top-4 right-4 z-10 inline-flex h-10 w-10 items-center justify-center rounded-full bg-slate-100/90 text-lg font-semibold text-slate-600 ring-1 ring-slate-200 shadow-sm transition hover:bg-slate-200 hover:text-slate-900 hover:shadow-md cursor-pointer"
         >
-          ✕
+          X
         </button>
 
         <div className="px-6 py-4 border-b">

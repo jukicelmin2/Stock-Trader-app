@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { Option } from "../../models/Option";
-import { createTradeIdea } from "../tradeIdea/api";
+import { createTradeIdea } from "../tradeIdeas/api";
 
 type Props = {
   option: Option;

@@ -5,7 +5,7 @@ import TradeIdeasPage from "./pages/TradeIdeasPage";
 import Navbar from "./components/layout/Navbar";
 import Hero from "./components/Hero";
 import SearchStocks from "./components/SearchStocks";
-import WatchlistPage from "./features/watchList/WatchListPage";
+import WatchlistPage from "./pages/WatchlistPage";
 
 const App = (): JSX.Element => {
   return (

@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 import type { TradeIdea } from "../../models/TradeIdea";
-
-const BASE_URL = "http://localhost:5063/api/TradeIdea";
+import {
+  deleteTradeIdeaById,
+  getAllTradeIdeas,
+} from "./api";
 
 export const useTradeIdeas = () => {
   const [ideas, setIdeas] = useState<TradeIdea[]>([]);
@@ -13,13 +15,7 @@ export const useTradeIdeas = () => {
     setError(null);
 
     try {
-      const res = await fetch(BASE_URL);
-
-      if (!res.ok) {
-        throw new Error("Failed to load trade ideas");
-      }
-
-      const data = await res.json();
+      const data = await getAllTradeIdeas();
 
       const mapped: TradeIdea[] = data.map((i: any) => ({
         id: Number(i.id),
@@ -55,14 +51,7 @@ export const useTradeIdeas = () => {
 
   const deleteIdea = async (id: number) => {
     try {
-      const res = await fetch(`${BASE_URL}/${id}`, {
-        method: "DELETE",
-      });
-
-      if (!res.ok) {
-        throw new Error("Failed to delete trade idea");
-      }
-
+      await deleteTradeIdeaById(id);
       setIdeas((prev) => prev.filter((i) => i.id !== id));
     } catch (err) {
       console.error(err);
