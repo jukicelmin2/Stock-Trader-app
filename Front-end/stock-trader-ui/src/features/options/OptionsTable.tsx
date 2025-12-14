@@ -74,7 +74,7 @@ const OptionsTable = ({ options, onSaveIdea }: Props): JSX.Element => {
             <td className="py-3 px-3 text-center">
               <button
                 onClick={() => onSaveIdea(o)}
-                className="px-3 py-1.5 rounded-full text-xs font-semibold bg-slate-900 text-white hover:bg-black shadow-sm"
+                className="px-3 py-1.5 rounded-full text-xs font-semibold bg-slate-900 text-white hover:bg-black shadow-sm cursor-pointer"
               >
                 Save
               </button>

@@ -60,7 +60,7 @@ const StockDetailModal = ({ ticker, onClose }: Props) => {
       <div className="relative bg-white rounded-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto shadow-2xl [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-slate-100 [&::-webkit-scrollbar-thumb]:bg-slate-300 hover:[&::-webkit-scrollbar-thumb]:bg-slate-400">
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 z-10 inline-flex h-10 w-10 items-center justify-center rounded-full bg-slate-100/90 text-lg font-semibold text-slate-600 ring-1 ring-slate-200 shadow-sm transition hover:bg-slate-200 hover:text-slate-900 hover:shadow-md"
+          className="absolute top-4 right-4 z-10 inline-flex h-10 w-10 items-center justify-center rounded-full bg-slate-100/90 text-lg font-semibold text-slate-600 ring-1 ring-slate-200 shadow-sm transition hover:bg-slate-200 hover:text-slate-900 hover:shadow-md cursor-pointer"
         >
           ✕
         </button>
@@ -75,7 +75,7 @@ const StockDetailModal = ({ ticker, onClose }: Props) => {
               <button
                 key={r}
                 onClick={() => setRange(r as 7 | 30)}
-                className={`px-3 py-1.5 rounded-full text-sm ${
+                className={`px-3 py-1.5 rounded-full text-sm cursor-pointer ${
                   range === r
                     ? "bg-gray-900 text-white"
                     : "bg-gray-100 text-gray-700"
@@ -114,7 +114,7 @@ const StockDetailModal = ({ ticker, onClose }: Props) => {
             />
 
             {loading ? (
-              <div className="text-sm text-gray-500">Loading options...</div>
+              <div className="text-sm text-gray-700">Loading options...</div>
             ) : (
               <div className="border rounded-lg overflow-hidden">
                 <div className="max-h-[300px] overflow-y-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-slate-100 [&::-webkit-scrollbar-thumb]:bg-slate-300 hover:[&::-webkit-scrollbar-thumb]:bg-slate-400">

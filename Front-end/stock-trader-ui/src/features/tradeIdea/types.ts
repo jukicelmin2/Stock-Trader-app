@@ -11,6 +11,6 @@ export type TradeIdeaCreateRequest = {
 
   optionType: "CALL" | "PUT";
 
-  strategy: number; // enum 1 | 2 | 3
+  strategy: number;
   notes: string;
 };
