@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getWatchlist, saveWatchlist } from "./storage";
+import { getWatchlist, saveWatchlist } from "../watchlist/storage";
 
 export const useWatchlist = () => {
   const [tickers, setTickers] = useState<string[]>([]);
