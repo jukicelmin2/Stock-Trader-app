@@ -119,10 +119,10 @@ jobs:
         run: dotnet test Stock-Trader-App.Tests/Stock-Trader-App.Tests.csproj --no-restore --verbosity normal
 
       # ---- FRONTEND TESTI (Vitest) ----
-      # Namesti npm pakete točno po package-lock.json (deterministično)
-      - name: Namesti npm odvisnosti (npm ci)
+      # Namesti npm pakete (npm install je bolj toleranten pri verzijah lock fila)
+      - name: Namesti npm odvisnosti
         working-directory: Front-end/stock-trader-ui
-        run: npm ci
+        run: npm install
 
       # Poženi Vitest teste na Node.js verziji iz matrice
       - name: Zaženi frontend teste (Vitest) [Node ${{ matrix.node-version }}]
