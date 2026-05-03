@@ -1,0 +1,97 @@
+name: "29897 - CI/CD Deploy"
+
+# ---------------------------------------------------------------
+# Workflow se proži ob potisku na main vejo.
+# Deploy se izvede SAMO, ko testni workflow ('29897 - CI Testi')
+# uspešno zaključi – to zagotavlja, da deployamo le preverjeno kodo.
+# ---------------------------------------------------------------
+on:
+  push:
+    branches:
+      - main
+
+  # Sproži se po zaključku testnega workflow-a
+  workflow_run:
+    workflows: ["29897 - CI Testi"]
+    types:
+      - completed
+
+jobs:
+  # =============================================================
+  # POSEL: Zgradi Docker sliki in ju potisni na DockerHub
+  #
+  # Posel se zažene SAMO, ko ga sproži workflow_run in je
+  # testni workflow zaključil z uspehom (conclusion == 'success').
+  # Dodatno preveri artefakt napaka.txt – če ni prazen, se ustavi.
+  # =============================================================
+  deploy:
+    name: "Deploy: Docker build & push na DockerHub"
+    runs-on: self-hosted
+
+    # Pogoj: izvedi deploy samo ob zaključku testnega workflow-a z uspehom
+    if: >
+      github.event_name == 'workflow_run' &&
+      github.event.workflow_run.conclusion == 'success'
+
+    steps:
+      # Pridobi kodo iz repozitorija
+      - name: Pridobi kodo (checkout)
+        uses: actions/checkout@v4
+
+      # Prenesi artefakt napaka.txt iz testnega workflow-a.
+      # run-id pove, iz katerega teka workflow-a naj prenese artefakt.
+      # GITHUB_TOKEN je potreben za prenos artefaktov med workflow-i.
+      - name: Prenesi artefakt napaka.txt iz testnega workflow-a
+        uses: actions/download-artifact@v4
+        with:
+          name: napaka
+          run-id: ${{ github.event.workflow_run.id }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      # Zagotovi, da je napaka.txt res prazen – brez napak v testiranju
+      # Če datoteka vsebuje karkoli, deploy se prekine
+      - name: Preveri vsebino napaka.txt
+        run: |
+          if [ -s napaka.txt ]; then
+            echo "NAPAKA: Testi so zaznali napake. Deploy se prekinja!"
+            echo "Vsebina napaka.txt:"
+            cat napaka.txt
+            exit 1
+          fi
+          echo "OK – napaka.txt je prazen. Nadaljujem z deployem."
+
+      # Nastavi Docker Buildx za napredno gradnjo slik
+      - name: Nastavi Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      # Prijava v DockerHub z gesli shranjenimi kot GitHub Secrets.
+      # Nastavi DOCKERHUB_USERNAME in DOCKERHUB_TOKEN v Settings > Secrets.
+      - name: Prijava v DockerHub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      # Zgradi Docker sliko za backend (ASP.NET Core 8.0) in jo potisni.
+      # Slika se označi z 'latest' in z natančnim SHA commita za sledljivost.
+      - name: Zgradi in potisni backend Docker sliko (ASP.NET Core)
+        uses: docker/build-push-action@v5
+        with:
+          context: ./Stock-Trader-App
+          file: ./Stock-Trader-App/Dockerfile
+          push: true
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/stock-trader-backend:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/stock-trader-backend:${{ github.sha }}
+
+      # Zgradi Docker sliko za frontend (React + Nginx) in jo potisni.
+      # Slika se označi z 'latest' in z natančnim SHA commita za sledljivost.
+      - name: Zgradi in potisni frontend Docker sliko (React + Nginx)
+        uses: docker/build-push-action@v5
+        with:
+          context: ./Front-end/stock-trader-ui
+          file: ./Front-end/stock-trader-ui/Dockerfile
+          push: true
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/stock-trader-frontend:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/stock-trader-frontend:${{ github.sha }}

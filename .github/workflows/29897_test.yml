@@ -1,0 +1,130 @@
+name: "29897 - CI Testi"
+
+# ---------------------------------------------------------------
+# Workflow se proži ob vsakem potisku kode na glavno vejo (main).
+# ---------------------------------------------------------------
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  # =============================================================
+  # POSEL 1: Preveri obstoj testnih skript
+  #
+  # Ta posel preveri, ali testne datoteke obstajajo.
+  # Standardna napaka (stderr) se preusmerja v datoteko napaka.txt.
+  # Datoteka se nato naloži kot artefakt za naslednji posel.
+  # =============================================================
+  preveri-teste:
+    name: "Posel 1: Preveri testne datoteke"
+    runs-on: self-hosted
+
+    steps:
+      # Pridobi najnovejšo kodo iz repozitorija
+      - name: Pridobi kodo (checkout)
+        uses: actions/checkout@v4
+
+      # Preverimo, ali obstajata .NET testni projekt in frontend testna mapa.
+      # Operator 2>>napaka.txt preusmerja stderr vsakega ukaza v datoteko.
+      # Operator || true preprečuje prekinitev posla pri napaki ukaza ls.
+      - name: Preveri obstoj testnih datotek (stderr -> napaka.txt)
+        run: |
+          # Ustvari prazno datoteko napaka.txt
+          touch napaka.txt
+
+          echo "Preverjam .NET testni projekt..."
+          ls Stock-Trader-App.Tests/Stock-Trader-App.Tests.csproj 2>>napaka.txt || true
+
+          echo "Preverjam frontend testno mapo..."
+          ls Front-end/stock-trader-ui/src/__tests__/ 2>>napaka.txt || true
+
+          # Prikaz vsebine za namene razhroščevanja v logu
+          echo "=== Vsebina napaka.txt ==="
+          cat napaka.txt && echo "(konec datoteke)" || echo "(datoteka je prazna)"
+
+      # Naloži napaka.txt kot artefakt – drugi posel ga bo prenesel in preveril
+      - name: Naloži artefakt napaka.txt
+        uses: actions/upload-artifact@v4
+        with:
+          name: napaka
+          path: napaka.txt
+          if-no-files-found: error
+
+  # =============================================================
+  # POSEL 2: Pripravi izvajalno okolje in poženi teste
+  #
+  # Ta posel je odvisen od posla 'preveri-teste' (needs).
+  # Če prvi posel ne uspe, se ta posel samodejno prekine.
+  # Posel preveri vsebino napaka.txt – če ni prazen, se prekine.
+  # Uporablja MATRIKO za testiranje na dveh verzijah Node.js.
+  # =============================================================
+  pozeni-teste:
+    name: "Posel 2: Testi [Node ${{ matrix.node-version }}]"
+    runs-on: self-hosted
+    needs: preveri-teste  # Odvisen od prvega posla
+
+    # ----------------------------------------------------------
+    # MATRICA: Teste frontend-a poženemo na dveh verzijah Node.js
+    # (20.x LTS in 22.x Current), da preverimo kompatibilnost.
+    # GitHub Actions ustvari ločeno instanco posla za vsako vrednost.
+    # ----------------------------------------------------------
+    strategy:
+      matrix:
+        node-version: ["20.x", "22.x"]
+      fail-fast: false  # Če ena matrica ne uspe, nadaljuj z drugimi
+
+    steps:
+      # Pridobi kodo iz repozitorija
+      - name: Pridobi kodo (checkout)
+        uses: actions/checkout@v4
+
+      # Prenesi artefakt napaka.txt, ki ga je ustvaril prvi posel
+      - name: Prenesi artefakt napaka.txt
+        uses: actions/download-artifact@v4
+        with:
+          name: napaka
+
+      # Preveri vsebino napaka.txt – če vsebuje napako, prekini posel
+      # Ukaz [ -s napaka.txt ] vrne true, če datoteka ni prazna
+      - name: Preveri vsebino napaka.txt (prekini, če ni prazna)
+        run: |
+          if [ -s napaka.txt ]; then
+            echo "NAPAKA: Testne datoteke niso bile najdene. Posel se prekinja."
+            echo "Vsebina napaka.txt:"
+            cat napaka.txt
+            exit 1
+          fi
+          echo "OK – napaka.txt je prazna. Testne datoteke so prisotne."
+
+      # Namesti .NET 8.0 SDK za backend (xUnit) teste
+      - name: Namesti .NET 8.0 SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "8.0.x"
+
+      # Namesti Node.js iz matrice za frontend (Vitest) teste
+      - name: Namesti Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      # ---- BACKEND TESTI (.NET / xUnit) ----
+      # Obnovi NuGet pakete za testni projekt
+      - name: Obnovi .NET odvisnosti
+        run: dotnet restore Stock-Trader-App.Tests/Stock-Trader-App.Tests.csproj
+
+      # Poženi xUnit teste brez ponovne obnove paketov
+      - name: Zaženi backend teste (xUnit)
+        run: dotnet test Stock-Trader-App.Tests/Stock-Trader-App.Tests.csproj --no-restore --verbosity normal
+
+      # ---- FRONTEND TESTI (Vitest) ----
+      # Namesti npm pakete točno po package-lock.json (deterministično)
+      - name: Namesti npm odvisnosti (npm ci)
+        working-directory: Front-end/stock-trader-ui
+        run: npm ci
+
+      # Poženi Vitest teste na Node.js verziji iz matrice
+      - name: Zaženi frontend teste (Vitest) [Node ${{ matrix.node-version }}]
+        working-directory: Front-end/stock-trader-ui
+        run: npm test
