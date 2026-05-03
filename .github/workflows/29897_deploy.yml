@@ -6,10 +6,6 @@ name: "29897 - CI/CD Deploy"
 # uspešno zaključi – to zagotavlja, da deployamo le preverjeno kodo.
 # ---------------------------------------------------------------
 on:
-  push:
-    branches:
-      - main
-
   # Sproži se po zaključku testnega workflow-a
   workflow_run:
     workflows: ["29897 - CI Testi"]
