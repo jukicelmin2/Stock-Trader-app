@@ -1,5 +1,6 @@
 using Stock_Trader_App.Models;
 using Stock_Trader_App.Models.Enums;
+using Xunit;
 
 namespace Stock_Trader_App.Tests;
 
